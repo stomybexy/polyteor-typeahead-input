@@ -1,0 +1,50 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../polyteor-typeahead-input.html">
+
+
+
+
+
+<dom-module id="demo-element">
+    <template>
+        <p>An example of <code>&lt;polyteor-typeahead-input&gt;</code>:</p>
+        <polyteor-typeahead-input min-length="0" selected="{{selected}}" subscription="todos" wait="300"></polyteor-typeahead-input>
+        <div>[[prettify(selected)]]</div>
+    </template>
+    <script>
+        (function () {
+    'use strict';
+
+    Polymer({
+        is: 'demo-element',
+        properties: {
+            
+        },
+        prettify: function (object) {
+            console.log(object)
+            if (!object) {
+                return '';
+            }
+            return JSON.stringify(object, null, '  ');
+        },
+
+
+        onChange: function (path, data) {
+            // console.log('todos changed', path);
+            return this.prettify(data);
+        }
+
+    });
+})();
+    </script>
+</dom-module>
