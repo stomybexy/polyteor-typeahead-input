@@ -40,8 +40,10 @@ Example:
 
         </style>
 
-        <polyteor-subscription name="[[subscription]]" args="[[args]]" data="{{data}}"></polyteor-subscription>
-        <paper-select2 selected="{{selected}}" typed-value="{{searchText}}" data="[[data]]" attr-for-label="label"></paper-select2>
+        <polyteor-subscription name="[[subscription]]" args="[[_args]]" data="{{data}}"></polyteor-subscription>
+        <paper-select2 search-label="[[searchPlaceholder]]" label="[[placeholder]]" selected="{{selected}}" 
+                       typed-value="{{searchText}}" data="[[data]]" attr-for-label="label"></paper-select2>
+        <div>[[data]]</div>
     </template>
 
     <script>
@@ -51,18 +53,30 @@ Example:
             properties: {
                 placeholder: {
                     type: String,
-                    value: ''
+                    value: '',
+                    notify: true
+                }, 
+                searchPlaceholder: {
+                    type: String,
+                    value: '',
+                    notify: true
                 },
-                args: {
+                _args: {
                     type: Array,
                     notify: true,
-                    computed: 'computeArgs(_searchText)'
+                    computed: 'computeArgs(_searchText, args)'
+                },
+                args:{
+                    type: Array,
+                    value: function(){
+                        return []
+                    }
                 },
                 searchText: {
                     type: String,
                     notify: true,
-                    value: '',
-                    observer: 'computeSearchString'
+                    reflectToAttribute: true,
+                    value: null
                 },
                 minLength: {
                     type: Number,
@@ -85,7 +99,7 @@ Example:
                 _searchText: {
                     type: String,
                     notify: true,
-                    value: ''
+                    reflectToAttribute:true
 
                 },
                 data: {
@@ -95,6 +109,7 @@ Example:
                 }
 
             },
+            observers: ['computeSearchString(searchText)'],
 
             // Element Lifecycle
 
@@ -124,18 +139,20 @@ Example:
             },
 
             // Element Behavior
-            computeArgs: function (searchText) {
-                return [
-                searchText
-            ];
+            computeArgs: function (searchText, args) {
+                args = args || [];
+                return [searchText].concat(args);
             },
-            computeSearchString: function () {
+            computeSearchString: function (newSearch) {
+                
                 var self = this;
                 this.debounce('lazySearch', function () {
-                    if ((self.searchText || '').length < self.minLength) {
+                    if ((newSearch || '').length < self.minLength) {
+                        self._searchText = null;
                         return;
                     }
-                    self._searchText = self.searchText;
+                    self._searchText = null;
+                    self._searchText = newSearch;
                 },self.wait)
             }
 

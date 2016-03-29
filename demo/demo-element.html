@@ -18,7 +18,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="demo-element">
     <template>
         <p>An example of <code>&lt;polyteor-typeahead-input&gt;</code>:</p>
-        <polyteor-typeahead-input min-length="0" selected="{{selected}}" subscription="todos" wait="300"></polyteor-typeahead-input>
+        <polyteor-typeahead-input  min-length="0" selected="{{selected}}" subscription="todos" wait="300"
+                                  style="max-width:400px;" placeholder="todo" search-placeholder="search todo"></polyteor-typeahead-input>
         <div>[[prettify(selected)]]</div>
     </template>
     <script>
